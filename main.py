@@ -22,7 +22,7 @@ def processData(birthdayfile):
             try:
                 birthdict[line[0]] = (line[1], datetime.datetime.strptime(line[2], "%d/%m/%Y").date())
             except:
-                logging.error('Error processing line #{0} for ID #{1}'.format(i+1, line[0]))
+                logging.error('Error processing line #{0} for ID #{1}'.format(i + 1, line[0]))
     return birthdict
 
 
@@ -45,7 +45,13 @@ def main():
         logging.critical('{0}:  unable to resolve URL {1}'.format(sys.exc_info(), args.url))
         print('An error has occurred, Please see error log.')
         exit()
-    csvData = processData(csvData)
+    try:
+        csvData = processData(csvData)
+    except:
+        logging.critical('{0}:  Unresolvable processing error with file {1}'.format(sys.exc_info(), csvData))
+        print('An error has occurred, Please see error log.')
+        exit()
+
     while True:
         idlookup = int(input("Please enter a ID to lookup, or type 0 or a negative number to quit: "))
         displayPerson(idlookup, csvData) if idlookup > 0 else exit()
